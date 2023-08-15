@@ -1,7 +1,9 @@
 from abc import ABC, abstractmethod
 import torch
 from typing import Dict
+import logging
 
+logger = logging.getLogger(__name__)
 
 class LogitsProcessor(ABC):
 
@@ -32,7 +34,12 @@ class BiasLogitsProcessor(LogitsProcessor):
         self.values = torch.tensor(list(self.biases.values()),
                                    dtype=torch.long)
 
-    def __call__(self, logits):
+    def __call__(self, logits, *args, **kwargs):
+        if args:
+            logging.info(args)
+        if kwargs:
+            logging.info(kwargs)
+
         if not self.biases:
             return logits
 
