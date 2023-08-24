@@ -164,7 +164,7 @@ class LlamaDecoderLayer(nn.Module):
             rope_scaling_factor = 1
         else:
             rope_scaling_factor = config.rope_scaling["factor"]
-        max_position = config.get("max_position_embeddings", 8192)
+        max_position = config.max_position_embeddings
         self.self_attn = LlamaAttention(
             hidden_size=self.hidden_size,
             num_heads=config.num_attention_heads,
