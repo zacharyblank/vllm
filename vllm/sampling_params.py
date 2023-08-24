@@ -1,5 +1,6 @@
 """Sampling parameters for text generation."""
 from typing import List, Optional, Union
+from vllm.logits_processors import LogitsProcessor
 
 _SAMPLING_EPS = 1e-5
 
@@ -40,23 +41,24 @@ class SamplingParams:
             tokens after the EOS token is generated.
         max_tokens: Maximum number of tokens to generate per output sequence.
         logprobs: Number of log probabilities to return per output token.
+        logits_processors: List of LogitsProcessors to change the probability
+            of token prediction at runtime.
     """
 
-    def __init__(
-        self,
-        n: int = 1,
-        best_of: Optional[int] = None,
-        presence_penalty: float = 0.0,
-        frequency_penalty: float = 0.0,
-        temperature: float = 1.0,
-        top_p: float = 1.0,
-        top_k: int = -1,
-        use_beam_search: bool = False,
-        stop: Union[None, str, List[str]] = None,
-        ignore_eos: bool = False,
-        max_tokens: int = 16,
-        logprobs: Optional[int] = None,
-    ) -> None:
+    def __init__(self,
+                 n: int = 1,
+                 best_of: Optional[int] = None,
+                 presence_penalty: float = 0.0,
+                 frequency_penalty: float = 0.0,
+                 temperature: float = 1.0,
+                 top_p: float = 1.0,
+                 top_k: int = -1,
+                 use_beam_search: bool = False,
+                 stop: Union[None, str, List[str]] = None,
+                 ignore_eos: bool = False,
+                 max_tokens: int = 16,
+                 logprobs: Optional[int] = None,
+                 logits_processors: List[LogitsProcessor] = None) -> None:
         self.n = n
         self.best_of = best_of if best_of is not None else n
         self.presence_penalty = presence_penalty
@@ -74,6 +76,7 @@ class SamplingParams:
         self.ignore_eos = ignore_eos
         self.max_tokens = max_tokens
         self.logprobs = logprobs
+        self.logits_processors = logits_processors
 
         self._verify_args()
         if self.use_beam_search:
